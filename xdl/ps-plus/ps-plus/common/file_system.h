@@ -41,11 +41,17 @@ class FileSystem {
 
     template <typename T>
     Status ReadRaw(T* data);
+
     template <typename T>
     Status ReadVec(std::vector<T>* data);
+
     template <typename T>    
     Status ReadTBBVec(tbb::concurrent_vector<T>* data);
-    Status ReadStr(std::string* data);
+
+    template <typename T>
+    Status CopyTBBVec(const tbb::concurrent_vector<T> *og_data, tbb::concurrent_vector<T> *new_data);
+
+    Status ReadStr(std::string *data);
     Status ReadShortStr(std::string* data);
    protected:
     virtual void CloseInternal() = 0;
@@ -139,6 +145,18 @@ Status FileSystem::ReadStream::ReadTBBVec(tbb::concurrent_vector<T>* data) {
 }
 
 template <typename T>
+Status FileSystem::ReadStream::CopyTBBVec(const tbb::concurrent_vector<T> *og_data,
+                                          tbb::concurrent_vector<T> *new_data)
+{
+  size_t size;
+  PS_CHECK_STATUS(ReadRaw(&size));
+  og_data->resize(size);
+  for (size_t i = 0; i < og_data->size(); i++){
+    
+  }
+}
+
+template <typename T>
 Status FileSystem::WriteStream::WriteRaw(T data) {
   return Write(&data, sizeof(T));
 }
@@ -159,6 +177,7 @@ Status FileSystem::WriteStream::WriteTBBVec(const tbb::concurrent_vector<T>& dat
   }
   return Status::Ok();
 }
+
 }
 
 #endif

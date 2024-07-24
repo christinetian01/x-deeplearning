@@ -40,8 +40,13 @@ class CheckpointUtils {
       const std::string& checkpoint_path,
       const std::unordered_map<std::string, std::unique_ptr<Variable>>& vars,
       size_t timeout=30);
+  Status SaveVariables2(
+      size_t id,
+      const std::string &checkpoint_path,
+      const std::unordered_map<std::string, std::unique_ptr<Variable>> &vars,
+      size_t timeout = 30);
 
- private:
+private:
   struct VariableStruct {
     enum SlicerType : int32_t {
       kIndexSlicer = 0,
@@ -75,6 +80,8 @@ class CheckpointUtils {
   Status LoadHashVariable(const std::vector<std::unique_ptr<LoadVariableStruct>>& variables, const std::string& name, const VariableInfo& info, size_t beg, size_t end, std::unique_ptr<Variable>& result_variable);
   static int64_t CalMaxSize(const std::vector<std::unique_ptr<LoadVariableStruct> >& variables, const std::string& name, size_t begin, size_t end, std::vector<std::vector<int64_t> >* keys, std::vector<std::vector<int64_t> >* values);
   VariableInfoCollection infos_;
+
+  Status MakeCopy(VariableStruct* og_var, VariableStruct* new_var);
 };
 
 }

@@ -101,6 +101,18 @@ Status CheckpointUtils::LoadVariables(
   return Status::Ok();
 }
 
+Status CheckpointUtils::MakeCopy(VariableStruct* og_var, VariableStruct* new_var){
+  new_var->type = og_var->type;
+  switch (new_var->type){
+    case VariableStruct::kIndexSlicer:
+      new_var->index_slicer = og_var->index_slicer;
+    case VariableStruct::kHashSlicer128:
+      new_var->hash_slicer128.count = og_var->hash_slicer128.count;
+      size_t size;
+      PS_CHECK_STATUS(ReadRaw(&size));
+  }
+}
+
 Status CheckpointUtils::SaveVariables(
     size_t id,
     const std::string& checkpoint_path,
